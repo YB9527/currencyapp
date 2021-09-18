@@ -3,6 +3,7 @@
 var ip  = "https://sunliying.shop:11443";
 exports.ip = ip; 
 
+
 var imgpriewurl  = ip+"/imgpriew/";
 exports.imgpriewurl = imgpriewurl;
 
