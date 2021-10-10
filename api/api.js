@@ -1,13 +1,38 @@
-//import config from "../static/config.js"
-//var baseip  = "http://192.168.3.3:3333";
-var baseip  = "https://sunliying.shop:11443";
-export var baseURL  = baseip +"/";
- class Api {
+class Api {
 	constructor(data={path:""}) {
-    let path = data.path?data.path:''
-	this.baseurl = baseURL+path;
-    //this.ip = baseip
+	  let path = data.path?data.path:''
+	  this.path = path;
+	  if( Api.config){
+	    this.baseurl = Api.config.ip+"/"+this.path;
+	    this.ip = Api.config.ip;
+	  }else{
+	    this.findConfig();
+	  }
+	  
 	}
+	findConfig(){
+	  if(!Api.config){
+		 return  this.requestOrg({
+		  	url:"/static/json/config.json",
+		}).then(res=>{
+			let data = res.data;
+			if(typeof(data) === "string"){
+				Api.config = uni.vue.$Tool.parse(data);
+			}else{
+				Api.config = data;
+			}
+			this.baseurl = Api.config.ip+"/"+this.path;
+			this.ip = Api.config.ip;
+			//console.log(Api.config);
+			//console.log(res);
+		}).catch(e=>{
+			 Api.config ={};
+		});
+	  }else{
+	    return true;
+	  }
+	}
+	static config;
   static param2URL(url,data){
     if(data){
       url = url + "?";
@@ -18,25 +43,31 @@ export var baseURL  = baseip +"/";
     }
     return url;
   }
+  /**
+   * 原生请求
+   */
+  requestOrg({method,url,data}){
+  	  return new Promise((resolve, reject) => {
+  	  	uni.request({
+  	  		url, //仅为示例，并非真实接口地址。
+  	  		method: method,
+  	  		data,
+  	  		success: (res) => {
+  	  			resolve(res);
+  	  		},
+  	  		fail(e) {
+  	  			reject(e);
+  	  		}
+  	  	});
+  	  });
+  }
   
-  request({method,url,data}){
-	  return new Promise((resolve, reject) => {
-	  	uni.request({
-	  		url, //仅为示例，并非真实接口地址。
-	  		method: method,
-	  		data,
-	  		success: (res) => {
-	  			if(res.data.isOk){
-	  			  resolve( res.data.data);
-	  			}else{
-					reject(res);
-				}
-	  		},
-	  		fail(e) {
-	  			reject(e);
-	  		}
-	  	});
-	  });
+  request(data){
+	return this.requestOrg(data).then(res=>{
+		if(res.data.isOk){
+		   return  res.data.data;
+		}
+	 });
   }
   /**
    * get请求

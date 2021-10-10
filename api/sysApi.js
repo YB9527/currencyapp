@@ -6,6 +6,7 @@ export default class SysApi extends Api{
 		super({path:"sys"});
 	}
 	getSystemDateTime(){
+		
 		return this.get({url:"/getdatetime"});
 	}
 }
