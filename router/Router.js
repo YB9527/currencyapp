@@ -1,4 +1,4 @@
-import routesconfig from "@/config/routes.config.js"
+import routesconfig from "./config.js"
 /*
  * 路由对象
  * 中心思想：需要路由鉴权,由于uni-app没有vue中的全局钩子函数，所以封装了Router对象。
@@ -26,12 +26,7 @@ class Router {
 				this.routeMap[route.name] = route;
 			}
 		}
-		//console.log(112,this.routeMap);
 		this.callBack = () => {};
-	}
-	setVue(vue){
-		this.vue = vue;
-		
 	}
 	
 	/**路由跳转
@@ -42,13 +37,16 @@ class Router {
 	jump(navType,key,params){
 		let self = this;
 		let route = this.routeMap[key];
+		let url;
 		if(!route){
-			console.log("没有配置路由："+key);
+			url = this.objParseUrlAndParam(key.url,params);
+		}else{
+			url = this.objParseUrlAndParam(route.path,params);
 		}
-		let url = this.objParseUrlAndParam(route.path,params);
+		
 		 new Promise(resole=>{
 			 let flag = true;
-			if(route.requiresAuth){
+			if(route && route.requiresAuth){
 				if(!userApi.token){
 					//self.redirectTo("login");
 					resole(false);

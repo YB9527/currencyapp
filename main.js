@@ -15,8 +15,8 @@ Vue.prototype.$DicJson = DicJson;
 import * as  functionTool from '@/common/js/FunctionTool.js'
 Vue.prototype.$FunctionTool = functionTool;
 
-/* import $Router from '@/common/js/Router.js';
-Vue.prototype.$Router = $Router; */
+import $Router from '@/router/Router.js';
+Vue.prototype.$Router = $Router;
 
 import * as Tool from '@/common/js/Tool.js'
 Vue.prototype.$Tool = Tool;

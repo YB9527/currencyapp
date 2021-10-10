@@ -1,9 +1,7 @@
-import config from "../static/config.js"
+//import config from "../static/config.js"
 //var baseip  = "http://192.168.3.3:3333";
-//var baseip  = "https://sunliying.shop:11443";
-var baseip  = config.ip;
+var baseip  = "https://sunliying.shop:11443";
 export var baseURL  = baseip +"/";
-
  class Api {
 	constructor(data={path:""}) {
     let path = data.path?data.path:''

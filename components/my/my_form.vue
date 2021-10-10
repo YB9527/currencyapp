@@ -203,7 +203,6 @@
 				 this.childCheck(row);
 			},
 			onNodeClick(node,data,prop,row){
-				debugger
 				data[prop] = node.value;
 				console.log(data);
 				//console.log(data[prop],node,row);

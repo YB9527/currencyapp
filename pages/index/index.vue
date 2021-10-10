@@ -34,10 +34,11 @@
 			goto(page){
 				//debugger
 				let url = page.url;
-				console.log(url)
-				uni.navigateTo({
+				//console.log(url)
+				this.$Router.navigateTo({
 					url
 				})
+				
 			},
 			async testSysApi(){
 				let data =await this.$SysApi.getSystemDateTime();
