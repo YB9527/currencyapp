@@ -1,9 +1,9 @@
 <template>
 	<!-- 模板 -->
-	<view class="myIamge matchparent" >
+	<view class="myimage matchparent" :key="src">
 		<image
 			@click="click"
-			v-if="!loaderror && src"
+			v-if="src"
 			mode="aspectFill"
 			:src="src" 	
 			@error="error"></image>
@@ -43,10 +43,10 @@
 			
 		},
 		created() {
-			
+			//console.log(this.loaderror,this.src);
 		},
 		methods:{
-			error(){
+			error(val){
 				this.loaderror = true
 			},
 			click(){
@@ -58,7 +58,7 @@
 </script>
 
 <style lang="scss" >
-	.myIamge{
+	.myimage{
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -67,6 +67,8 @@
 			height: 100%;
 		}
 		.error{
+			width: 100%;
+			height: 100%;
 			display: flex;
 			justify-content: center;
 			align-items: center;
@@ -74,6 +76,7 @@
 			color: #c0c4cc;
 			vertical-align: middle;
 			background: #f5f7fa;
+			padding: 20rpx;
 		}
 	}
 </style>

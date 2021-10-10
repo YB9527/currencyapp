@@ -1,10 +1,20 @@
+var setParams = function(data){
+	if(!data.wait){
+		data.wait = 100
+	}
+	if(!data.params){
+		data.params = []
+	}
+}
+
 var debounceFirstFunction={}
-/**
- *  只执行最开始一次
+
+/**只运行第一次
+ * @param {Object} tag
  * @param {Object} fn
  * @param {Object} wait
  */
-function debounceFirst(tag,fn,{wait,params}){
+export function debounceFirst(tag,fn,wait){
 	if(!wait){
 		wait = 100;
 	}
@@ -12,100 +22,49 @@ function debounceFirst(tag,fn,{wait,params}){
 	if(!exe){
 		debounceFirstFunction[tag] = fn;
 		setTimeout(()=>{
-			console.log(debounceFirstFunction[tag]);
-			debounceFirstFunction[tag](params);
+			//console.log(debounceFirstFunction[tag]);
+			debounceFirstFunction[tag]();
 			debounceFirstFunction[tag] = undefined;
 		},wait);
 	}
 }
-exports.debounceFirst = debounceFirst;
-/* debounceFirst("a",()=>{console.log(1111)});
-debounceFirst("a",()=>{console.log(2222)});
-debounceFirst("a",()=>{console.log(2222)});
-debounceFirst("a",()=>{console.log(2222)});
-setTimeout(()=>{
-	 debounce("a",()=>{console.log(444)});
-},1000); */
 
-var debounceFunction={};
+
+
+
+var debounceFunction={}
+
+
 /**
- *  只执行最后一次
- * @param {Object} fn
- * @param {Object} wait
+ * 只运行最后一次
  */
-function debounceSeq(tag,fn,other){
-  if(!other){
-    other = {};
-  }
-  let wait= other.wait;
-  if(!wait){
-    wait = 100;
-  }
-
-  let lastexe = debounceFunction[tag];
-  let  flag = false;
-  if(!lastexe){
-    flag = true;
-  }else if( lastexe.seq < other.seq ){
-    //如果这次优先级大，那么清空以前方法，在执行现在的
-    delete debounceFunction[tag];
-    clearTimeout(lastexe.exe);
-    flag = true;
-  }
-  if(flag){
-    let  exe = setTimeout(()=>{
-      fn(other.params);
-      delete debounceFunction[tag];
-    },wait);
-    debounceFunction[tag] = {exe,other};
-  }
-}
-exports.debounceSeq = debounceSeq;
-
-
-var debounceFunction={};
-/**
- *  只执行最后一次
- * @param {Object} fn
- * @param {Object} wait
- */
-function debounce(tag,fn,other){
-  if(!other){
-    other = {};
-  }
-  let wait= other.wait;
-  if(!wait){
-    wait = 100;
-  }
-
+export function debounce(tag,fn,data={wait:100,params:[]}){
+	setParams(data);
 	let exe = debounceFunction[tag];
 	if(exe){
 		delete debounceFunction[tag];
 		clearTimeout(exe);
 	}
 	exe = setTimeout(()=>{
-	  fn(other.params);
-  },wait);
+		fn(...data.params);
+	},data.wait);
 	debounceFunction[tag] = exe;
 }
-exports.debounce = debounce;
-/* debounce("a",()=>{console.log(1111)});
-debounce("a",()=>{console.log(1111)});
-debounce("a",()=>{console.log(1111)});
-debounce("a",()=>{console.log(2222)});
-setTimeout(()=>{
-	 debounce("a",()=>{console.log(3333)});
-},1000); */
+
+
 
 
 
 var throttleFunction={}
+
+
 /**
- *  一定时间内只执行最后一次
+ * 每段时间运行
+ * @param {Object} tag
  * @param {Object} fn
  * @param {Object} wait
  */
-function throttle(tag,fn,wait){
+export function throttle(tag,fn,wait){
 	if(!wait){
 		wait = 100;
 	}
@@ -117,13 +76,4 @@ function throttle(tag,fn,wait){
 	}
 	throttleFunction[tag] = fn;
 }
-exports.throttle = throttle;
-/* throttle("a",()=>{console.log(1111)});
-throttle("a",()=>{console.log(2222)});
 
-setTimeout(()=>{
-	 throttle("a",()=>{console.log(3333)});
-	 throttle("a",()=>{console.log(1111)});
-	 throttle("a",()=>{console.log(2222)});
-	 throttle("a",()=>{console.log(3333)});
-},1000); */

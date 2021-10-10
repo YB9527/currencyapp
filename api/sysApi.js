@@ -1,14 +1,13 @@
 
-import api from './api.js';
-var baseURL = api.ip+"/sys";
+import Api from './Api.js';
 
-/**
- * 获取系统时间
- */
-var getSystemDateTime = function(){
-	let url =baseURL+"/getdatetime";
-	return api.requestGET({url});
-	
+export default class SysApi extends Api{
+	constructor() {
+		super({path:"sys"});
+	}
+	getSystemDateTime(){
+		return this.get({url:"/getdatetime"});
+	}
 }
-exports.getSystemDateTime = getSystemDateTime;
+
 

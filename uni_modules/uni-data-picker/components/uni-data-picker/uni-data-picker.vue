@@ -6,7 +6,10 @@
 					<text v-if="errorMessage" class="selected-area error-text">{{errorMessage}}</text>
 					<view v-else-if="loading && !isOpened" class="selected-area">
 						<uni-load-more class="load-more" :contentText="loadMore" status="loading"></uni-load-more>
+						
+						
 					</view>
+					
 					<scroll-view v-else-if="inputSelected.length" class="selected-area" scroll-x="true">
 						<view class="selected-list">
 							<view class="selected-item" v-for="(item,index) in inputSelected" :key="index">
@@ -195,6 +198,7 @@
 				this._dispatchEvent(e)
 			},
 			_processReadonly(dataList, valueArray) {
+				
 				var isTree = dataList.findIndex((item) => {
 					return item.children
 				})
@@ -222,6 +226,7 @@
 				if (result.length) {
 					this.inputSelected = result
 				}
+				
 			},
 			_filterForArray(data, valueArray) {
 				var result = []

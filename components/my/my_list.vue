@@ -1,18 +1,22 @@
 <template>
+	
 	<!-- 列表，如果要加载下页数据必须要添加高度 -->
-		<scroll-view class="listvue"  scroll-y @scrolltolower="scrolltolower" >
+		<view class="my_list">
 			<!-- 列表内容,滚动分页 -->
-
+			<!-- <button @click="test">测试</button> -->
 			<view class="list" v-if="dataArray ">
 				 <transition-group name="fade" >
-				   <view class="selflistitem"
-					:class="{'touch-move-active':touchstateMap[index]&&touchstateMap[index].isTouchMove}"
+				   <view 
+				   class="selflistitem"
+					:class="{'touch-move-active':touchstateMap[index]&&touchstateMap[index].isTouchMove,'listitemactive':currentitem === item}"
 					v-for="(item,index) in dataArray" 
-					:key="item[datakey]"
+					:key="index"
 					@touchstart="touchstart"
-					@touchmove="touchmove" 
+					@touchmove="touchmove"
+					@click="itemClick(index,item)"
 					:data-index='index'>
-						<view class="list-count" 
+						<!-- <view>{{item[datakey]+''+index}}</view> -->
+						<view class="list-count"  v-show="true"
 						:class="[listitemclass,showsideslipArray?'list-count-btn'+(sideslipArray.length):'']"
 								>
 							<slot  :item="item" :index="index">
@@ -39,7 +43,7 @@
 					</text>
 				</slot>
 			</view>
-		</scroll-view>
+	</view>
 </template>
 
 <script>
@@ -50,16 +54,26 @@
 				type:Boolean,
 				default:true
 			},
-			
+			showactive:{
+				type:Boolean,
+				default:true
+			},
 			datakey:{
 				type:String,
-				default:"id"
+				default:"name"
 			},
-			dataArray:Array,//显示数据
+			dataArray: {
+				type: Array,
+				default: ()=>[],
+			},
 			listitemclass:String,
-			totalcount:{
+			datatotal:{
 				type:Number,
 				default:0,//数据数量
+			},
+			pagesize:{
+				type: Number,
+				default: 20,
 			},
 			showsideslipArray:Boolean,
 			sideslipArray:{
@@ -71,14 +85,27 @@
 					]
 				}
 			},
-			loadNextPageData:Function,//加载下页数据,如果返回false，那么就是加载完成数据了
+			
+			event:{
+			  type:Object,
+			  default:()=>{
+			    return {
+				  itemClick:(index,item)=>{},
+			      handleCurrentChange: (index,callback) => {},
+			      pageSizeChange:(size,callback)=>{},
+			    }
+			  }
+			},
+			
+			
 		},
 		data(){
 			let touchstateMap= {};
-			for (let i = 0; i < this.totalcount; i++) {
+			for (let i = 0; i < this.datatotal; i++) {
 				touchstateMap[i+""] = {isTouchMove:false};
 			}
 			return{
+				currentitem:{},
 				 user:{
 					"lastName":"bar",
 					"firstName":"foo"
@@ -87,27 +114,28 @@
 				startY: 0,
 				touchstateMap,
 				isloadover:false,
+				pageNum:1,
 			}
 		},
 		computed:{
 			
 		},
 		watch:{
-			"dataArray.length"(){
-				this.checkLoadOver();
-			}
+
 		},
 		created() {
-			this.checkLoadOver();
+			
 		},
 		methods:{
+			test(){
+				this.dataArray.splice(0,1);
+			},
 			checkLoadOver(){
-				if(this.totalcount !== undefined && this.dataArray.length === this.totalcount){
+				if(this.datatotal !== undefined && this.dataArray.length >= this.datatotal){
 					this.isloadover = true;
 				}else{
 					this.isloadover = false;
 				}
-				
 			},
 			delThis(item,index){
 				console.log("删除",item);
@@ -180,24 +208,50 @@
 				btnitem.click && btnitem.click(dataArray,item,index);
 			},
 			async scrolltolower(){
-				if(!this.isloadover && this.loadNextPageData){
-					let flag =  await  this.loadNextPageData();
-					if(!flag){
-						this.isloadover = true;
-					}else if(this.totalcount !== undefined && this.dataArray.length === this.totalcount){
-						this.isloadover = true;
-					}
+				
+				if(!this.isloadover && this.event.handleCurrentChange){
+					await this.handleCurrentChange(this.pageNum++);
+					//console.log(1,this.datatotal,this.dataArray.length)
+					this.checkLoadOver();
 				}
 				//console.log("滚到底部了")
 			},
+			/**
+			 * 下一页数据，
+			 * @param {Object} pageindex
+			 */
+			async handleCurrentChange(pageindex) {
+				//console.log(1,this.isloadover)
+				if( this.event.handleCurrentChange){
+					this.$FunctionTool.debounce("定时启动loading",this.$UniTool.showLoading,{wait:500,params:[undefined,false]});
+					this.event.handleCurrentChange(pageindex,this.pagesize,datas=>{
+						if(pageindex === 1){
+							 this.$Tool.arrayReplace(this.dataArray,datas);
+							 this.isloadover = false;
+							 
+						}else{
+							this.dataArray.push(...datas);
+						}
+						this.checkLoadOver();
+						this.$FunctionTool.debounce("定时启动loading",this.$UniTool.hideLoading);
+					});
+				}	 
+			},
+			itemClick(index,item){
+				if(this.showactive){
+					this.currentitem = item;
+				}
+				this.event.itemClick && this.event.itemClick(index,item);
+			},
+			
+			
 		}
 	}
 </script>
 
 <style lang="scss" >
-	.listvue{
-		height: 100%;
-		width: 100%;
+	.my_list{
+
 		 //background-color: #1AAD19;
 		.loadover{
 			text-align: center;
@@ -307,32 +361,19 @@
 		
 		/* start 移除，添加条目 */
 
-		
-		.fade-item {
+		.fade-enter, .fade-leave-to{
+		  opacity: 0;
+		  transform: translateY(-30px);
+		}
+		.fade-leave-active {
+		   position: absolute;
+		}
+		.selflistitem {
+		  transition: all 1s;
 		  display: inline-block;
-		  margin-right: 10px;
 		}
-		.fade-enter-active, .fade-leave-active {
-		  transition: all .5s;
-		}
-
-		.fade-level{
-			opacity: 1;
-		}
-		.fade-leave-to {
-		  opacity: 0.2;
-		  transform: translateY(-100rpx);
-		}
-		
-		.fade-enter{
-			opacity: 0.2;
-			transform: translateY(-200rpx);
-		}
-		.fade-enter-to {
-		  opacity: 1;
-		}
-		.fade-move {
-		  transition: transform 1s;
+		.listitemactive{
+			border-left: 2rpx solid var(--primary);
 		}
 	}
 </style>

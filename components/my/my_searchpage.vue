@@ -87,8 +87,8 @@
 				this.findHistory();
 			},
 			clear(){
-				
 				this.selfOk("");
+				
 			},
 			selfOk(value){
 				this.showpage = false;
@@ -118,7 +118,9 @@
 			},
 			selfCancel(){
 				this.showpage = false;
-				this.selfOk("");
+				if(this.searchkey){
+					this.selfOk("");
+				}
 				this.cancel && this.cancel();
 			},
 			/**

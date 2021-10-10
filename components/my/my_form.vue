@@ -11,73 +11,86 @@
 			:key="index"
 			class="module"
 			:class="module.class">
+			
 			<slot v-if="module.slot" ></slot>
-			<view v-if="!module.slot" class="title" :class="module.titleclass" ><text> {{module.title}}</text></view>
-			<view v-if="!module.slot" class="modulecontent" :class="module.modulecontentclass">
-				
-				<view v-for="(row,j) in module.array"  v-if="!(row.show === false)">
-					<slot v-if="row.type === 'slot' "  :data="data" :modulerow="row"></slot>
-					<view v-else :class="row.class" >
-						<view class="label" ><text> {{row.text}} </text></view>
-						<view class="value">
-							<input
-								@blur="childCheck(row)"
-								v-if="row.type === 'input'" type="text"  v-model="data[row.prop]"   :placeholder="row.placeholder"/>
-							<input
-								@blur="childCheck(row)"
-								v-if="row.type === 'number'" type="number"  v-model="data[row.prop]"   :placeholder="row.placeholder"/>
-							<input
-								@blur="childCheck(row)"
-								v-else-if="row.type === 'idcard'" type="idcard"    v-model="data[row.prop]"  :placeholder="row.placeholder"/>
-							<input
-								@blur="childCheck(row)"
-								v-else-if="row.type === 'tel'"  type="tel"  v-model="data[row.prop]"  :placeholder="row.placeholder" />
-							<input
-								@blur="childCheck(row)"
-								v-else-if="row.type === 'digit'"  type="digit"  v-model="data[row.prop]"  :placeholder="row.placeholder" />
-							<view 
-								@blur="childCheck(row)"
-								v-else-if="row.type === 'textarea'" >
-								  <textarea  
-									@blur="childCheck(row)"
-									:disabled="row.disabled"
-								    v-model="data[row.prop]" 
-								    :placeholder="row.placeholder"/>
+			<view class="modulecontent">
+				<view v-if="!module.slot" class="title titletag" :class="module.titleclass" ><text> {{module.title}}</text></view>
+				<view v-if="!module.slot"  :class="module.modulecontentclass">
+					
+					
+					<view v-for="(column,j) in module.array"  v-if="!(column.show === false)">
+						<slot v-if="column.type === 'slot' "  :data="data" :modulerow="column"></slot>
+						<view v-else :class="column.class" >
+							<view class="label" ><text> {{column.text}} </text></view>
+							<view class="value">
+								<text v-if="column.type === 'text'" >{{data[column.prop] | textfileter(column.optionmap)}}</text>
+								<input
+									@blur="childCheck(column)"
+									v-if="column.type === 'input'" type="text"  v-model="data[column.prop]"   :placeholder="column.placeholder"/>
+								<input
+									@blur="childCheck(column)"
+									v-if="column.type === 'number'" type="number"  v-model="data[column.prop]"   :placeholder="column.placeholder"/>
+								<input
+									@blur="childCheck(column)"
+									v-else-if="column.type === 'idcard'" type="idcard"    v-model="data[column.prop]"  :placeholder="column.placeholder"/>
+								<input
+									@blur="childCheck(column)"
+									v-else-if="column.type === 'tel'"  type="tel"  v-model="data[column.prop]"  :placeholder="column.placeholder" />
+								<input
+									@blur="childCheck(column)"
+									v-else-if="column.type === 'digit'"  type="digit"  v-model="data[column.prop]"  :placeholder="column.placeholder" />
+								<view 
+									@blur="childCheck(column)"
+									v-else-if="column.type === 'textarea'" >
+									  <textarea  
+										@blur="childCheck(column)"
+										:disabled="column.disabled"
+									    v-model="data[column.prop]" 
+									    :placeholder="column.placeholder"/>
+								</view>
+								<radio-group   v-else-if="column.type === 'radio'" @change="radioChange($event,data,column.prop,column)">
+									<label class="gender-item" v-for="(radio,j) in column.options" :key=j>
+										<radio :checked="data[column.prop] == radio.key" class="gender-item-radio"  :value="radio.key" />
+										<text class="gender-item-text">{{radio.value}}</text>
+									</label>
+								</radio-group>
+								<uni-datetime-picker
+									v-else-if="column.type === 'date'"
+									class="datepicker"
+									:disabled="column.disabled"
+									type="date" v-model="data[column.prop]">
+								</uni-datetime-picker>
+								<uni-data-picker 
+									:isshow="true"
+									v-else-if="column.type === 'datapicker' 
+										|| column.type === 'cascader' 
+										|| column.type === 'select'"
+									:placeholder="column.placeholder" 
+									v-model="data[column.prop]"
+									:popup-title="column.placeholder" 
+									:localdata="column.options"
+									:step-searh="true" self-field="code" parent-field="parent_code"
+									@change="onchange" 
+									@nodeclick="onNodeClick($event,data,column.prop,column)">
+								</uni-data-picker>
+								<div v-else-if="column.type === 'fj'">
+									<!-- <webUploadFile :elupload="column.upload" :idname="column.name"></webUploadFile> -->
+									<myUploadFile  :uploadAttr="column.upload" ></myUploadFile>
+								</div>
 							</view>
-							<radio-group   v-else-if="row.type === 'radio'" @change="radioChange($event,data,row.prop,row)">
-								<label class="gender-item" v-for="(radio,j) in row.options" :key=j>
-									<radio :checked="data[row.prop] == radio.key" class="gender-item-radio"  :value="radio.key" />
-									<text class="gender-item-text">{{radio.value}}</text>
-								</label>
-							</radio-group>
-							<uni-datetime-picker
-								v-else-if="row.type === 'date'"
-								class="datepicker"
-								:disabled="row.disabled"
-								type="date" v-model="data[row.prop]">
-							</uni-datetime-picker>
-							<uni-data-picker 
-								:isshow="true"
-								v-else-if="row.type === 'datapicker'"
-								:placeholder="row.placeholder" 
-								v-model="data[row.prop]"
-								:popup-title="row.placeholder" 
-								:localdata="row.options"
-								:step-searh="true" self-field="code" parent-field="parent_code"
-								@change="onchange" 
-								@nodeclick="onNodeClick($event,data,row.prop,row)">
-							</uni-data-picker>
 						</view>
-					</view>
-					<view :class="row.class" class="error" v-if="row.error">
-						<view class="label"></view>
-						<view class="value">
-							<text>*{{row.error}}</text>
+						<view :class="column.class" class="error" v-if="column.error">
+							<view class="label"></view>
+							<view class="value">
+								<text>*{{column.error}}</text>
+							</view>
+							
 						</view>
-						
 					</view>
 				</view>
+						
 			</view>
+			
 		</view>
 	`	<view class="subgroup aroundrow" v-if="haveback || haveok">
 			<view class="cancerbtn  itemchild" v-if="haveback"  @click="back">
@@ -97,7 +110,9 @@
 <script>
 	import DicJson from '@/common/js/DicJson.js'
 	import Tool from '@/common/js/Tool.js'
+	import myUploadFile from './my-uploadFile'
 	export default{
+		components:{myUploadFile},
 		props:{
 			
 			data:{
@@ -120,7 +135,7 @@
 							{type:"input",class:"row",labelclass:"",valueclass:"",text:"户主姓名",prop:"hzxm"},
 							{type:"idcard", class:"row",labelclass:"",valueclass:"",text:"证件号码",prop:"hzzjhm"},
 							{type:"input", class:"row",labelclass:"",valueclass:"",text:"通信地址",prop:"txdz"},
-							{type:"datapicker", class:"row",labelclass:"",valueclass:"",text:"性别",prop:"xb",options:Tool.mapToArray(DicJson.XB,"value","text")},
+							// {type:"datapicker", class:"row",labelclass:"",valueclass:"",text:"性别",prop:"xb",options:Tool.mapToArray(DicJson.XB,"value","text")},
 							{type:"tel", class:"row",labelclass:"",valueclass:"",text:"电话",prop:"15968711521"},
 						]},
 						{slot:"sfzzm"},//身份證正面
@@ -143,8 +158,7 @@
 				type:String,
 				default:"返回"
 			},
-			backClick:Function,
-					
+			
 			haveok:{
 				type:Boolean,
 				default:true,
@@ -153,7 +167,7 @@
 				type:String,
 				default:"确定"
 			},
-			okClick:Function,
+			
 		},
 		data(){
 			return{
@@ -164,6 +178,16 @@
 		},
 		watch:{
 			
+		},
+		filters:{
+			textfileter(text,optionmap,column){
+		
+				if(optionmap && optionmap[text]){
+		
+					return optionmap[text]
+				}
+				return text;
+			}
 		},
 		created() {
 			//console.log(DicJson)
@@ -179,14 +203,19 @@
 				 this.childCheck(row);
 			},
 			onNodeClick(node,data,prop,row){
+				debugger
 				data[prop] = node.value;
+				console.log(data);
+				//console.log(data[prop],node,row);
 				this.childCheck(row);
 			},
 			back(){
-				this.clearClick && this.clearClick();
+				this.$emit("back");
+				
 			},
 			ok(){
-				this.okClick && this.okClick();
+				this.$emit("ok");
+
 			},
 			onchange(e) {
 				const value = e.detail.value
@@ -197,11 +226,11 @@
 					if(module.show === false){
 						continue;
 					}
-					for(let item of module.array){
-						if(item.show === false){
+					for(let column of module.array){
+						if(column.show === false){
 							continue;
 						}
-						let error = this.childCheck(item);
+						let error = this.childCheck(column);
 						if(error){
 							flag = false;
 						}
@@ -213,18 +242,18 @@
 					return true;
 				}
 			},
-			childCheck(item){
+			childCheck(column){
 				let data = this.data;
 				
 				let error="";
-				if(item.check && item.prop){
-					if(item.check instanceof Array){
-						error  = item.check[0](this.data[item.prop],item.check[1]);
+				if(column.check && column.prop){
+					if(column.check instanceof Array){
+						error  = column.check[0](this.data[column.prop],column.check[1]);
 					}else{
-						error  = item.check(this.data[item.prop]);
+						error  = column.check(this.data[column.prop]);
 					}
 				}
-				item.error = error;
+				column.error = error;
 				return error;
 			}
 		}
@@ -234,7 +263,11 @@
 <style lang="scss" >
 	.my_formvue{
 		.title{
-			font-size:  var(--fonttitle); 
+			font-size:  $uni-font-size-title; 
+		}
+		.titletag{
+			border-left: 12rpx solid $uni-color-title;
+			padding-left: 20rpx;
 		}
 		.row{
 			display: flex;
@@ -251,12 +284,11 @@
 		.error{
 			margin-top: -20rpx;
 			height: 50rpx;
-			color: var(--danger);
+			color: $uni-color-error;
 		}
 		.value{
 			
 		}
-		
 		.uni-data-tree-input{
 			::v--deep .input-value-border {
 			    border: 0px solid #e5e5e5!important;
@@ -306,7 +338,8 @@
 				width: calc(50% - 40px);
 				height: 60rpx;
 				line-height: 60rpx;
-				background-color: var(--primary);
+				background-color: $uni-color-primary;
+				//background-color: #FFAA7F;
 				.label{
 					color: #FFFFFF;
 				}

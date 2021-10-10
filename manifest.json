@@ -71,7 +71,10 @@
         "enable" : false
     },
     "h5" : {
-        "title" : "RestaurantFront",
-        "domain" : "餐馆"
+        "title" : "通用app",
+        "domain" : "",
+        "router" : {
+            "base" : "/h5/"
+        }
     }
 }

@@ -1,107 +1,85 @@
 {
 	"pages": [ 
 		{
-			"path": "pages/demo/demo",
-			"style" :
-			{
-			    "enablePullDownRefresh": false
-			}
-		},
-		{
-			"path": "pages/index/index2"
-		},
-		{
-			"path": "pages/index/index3"
-		},
-		{
-			"path": "pages/index/index4"
+			"path": "pages/index/index"
 		}
-	   
-        ,{
-            "path" : "pages/demo/myformtest/myformtest",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/demo/transitionGroup/transitionGroup",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "动画组测试",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/demo/directive/directive",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/demo/position/position",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/demo/store/store",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/demo/dynamicCompontent/dynamicCompontent",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
     ],
+	"subPackages": [
+		/*demo子包*/
+		{
+			"root": "demopages",
+			"pages": [
+				{
+					"path": "demo",
+					"style" :
+					{
+					    "enablePullDownRefresh": false
+					}
+				}
+				,{
+				    "path" : "transitionGroup/transitionGroup",
+				    "style" :                                                                                    
+				    {
+				        "navigationBarTitleText": "动画组测试",
+				        "enablePullDownRefresh": false
+				    }
+				    
+				}
+				,{
+				    "path" : "directive/directive",
+				    "style" :                                                                                    
+				    {
+				        "navigationBarTitleText": "",
+				        "enablePullDownRefresh": false
+				    }
+				    
+				}
+				,{
+				    "path" : "position/position",
+				    "style" :                                                                                    
+				    {
+				        "navigationBarTitleText": "",
+				        "enablePullDownRefresh": false
+				    }
+				    
+				}
+				,{
+				    "path" : "store/store",
+				    "style" :                                                                                    
+				    {
+				        "navigationBarTitleText": "",
+				        "enablePullDownRefresh": false
+				    }
+				    
+				}
+				,{
+				    "path" : "dynamicCompontent/dynamicCompontent",
+				    "style" :                                                                                    
+				    {
+				        "navigationBarTitleText": "",
+				        "enablePullDownRefresh": false
+				    }
+				    
+				},
+				{
+				    "path" : "myformtest/myformtest"
+				    
+				}
+			]
+		}
+	],
 	"tabBar" : {
 	    "color" : "#7A7E83",
 	    "selectedColor" : "#3cc51f",
 	    "borderStyle" : "black",
 	    "backgroundColor" : "#ffffff",
 	    "list" : [
-	        {
-	            "pagePath" : "pages/demo/demo",
-	          "iconPath" : "static/images/icon_my.png",
-	          "selectedIconPath" : "static/images/icon_my.png",
-	            "text" : "菜单1"
-	        },
-	        {
-	            "pagePath" : "pages/index/index2",
-	            "iconPath" : "static/images/icon_my.png",
-	            "selectedIconPath" : "static/images/icon_my.png",
-	            "text" : "菜单2"
-	        },
-	        {
-	            "pagePath" : "pages/index/index3",
-	            "iconPath" : "static/images/icon_my.png",
-	            "selectedIconPath" : "static/images/icon_my.png",
-	            "text" : "菜单3"
-	        },
-			{
-	            "pagePath" : "pages/index/index4",
-	            "iconPath" : "static/images/icon_my.png",
-	            "selectedIconPath" : "static/images/icon_my.png",
-	            "text" : "菜单4"
-	        }
+	       {
+	           "pagePath" : "pages/index/index",
+	           "iconPath" : "static/images/icon_my.png",
+	           "selectedIconPath" : "static/images/icon_my.png",
+	           "text" : "菜单1"
+	       }
 		]
 	},
 	"globalStyle": {

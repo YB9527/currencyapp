@@ -2,15 +2,24 @@
   <view class="uni-data-pickerview">
     <scroll-view class="selected-area" scroll-x="true" scroll-y="false" :show-scrollbar="false">
       <view class="selected-list">
-        <view class="selected-item" :class="{'selected-item-active':index==selectedIndex}" v-for="(item,index) in selected"
-          :key="index" v-if="item.text" @click="handleSelect(index)">
+		  
+        <view class="selected-item" 
+			:class="{'selected-item-active':index==selectedIndex}" 
+		  v-for="(item,index) in selected"
+          :key="index" 
+		  v-if="item.text && selected.length > 1" 
+		  @click="handleSelect(index)">
+		  <text v-if="index === 0 && item.value" style="color: #999999;">当前选择：</text>
           <text class="">{{item.text}}</text>
         </view>
       </view>
     </scroll-view>
     <view class="tab-c">
       <scroll-view class="list" v-for="(child, i) in dataList" :key="i" v-if="i==selectedIndex" :scroll-y="true">
-        <view class="item" :class="{'is-disabled': !!item.disable}" v-for="(item, j) in child" :key="j" @click="handleNodeClick(item, i, j)">
+        <view class="item" 
+			:class="{'is-disabled': !!item.disable}" v-for="(item, j) in child" 
+			:key="j" 
+			@click="handleNodeClick(item, i, j)">
           <text class="item-text">{{item.text}}</text>
           <view class="check" v-if="selected.length > i && item.value == selected[i].value"></view>
         </view>
@@ -71,6 +80,7 @@
         this.load()
       },
       load() {
+		  
         if (this.isLocaldata) {
           this.loadData()
         } else if (this.value.length) {
@@ -86,7 +96,7 @@
         if (item.disable) {
           return
         }
-
+		console.log(this);
         const node = this.dataList[i][j]
         const {
           value,
@@ -132,8 +142,12 @@
           }, this._nodeWhere())
           return
         }
-
-        this.onSelectedChange(node, false)
+		//debugger
+		//return;
+		if(!node.hasechildren){
+			this.onSelectedChange(node, false)
+		}
+        
       },
       updateData(data) {
         this._treeData = data.treeData
@@ -149,13 +163,13 @@
         this.$emit('datachange')
       },
       onSelectedChange(node, isleaf) {
+		  
         if (isleaf) {
           this._dispatchEvent()
         }
-
-				if (node) {
-					this.$emit('nodeclick', node)
-				}
+		if (node) {
+			this.$emit('nodeclick', node)
+		}
       },
       _dispatchEvent() {
         this.$emit('change', this.selected.slice(0))

@@ -445,7 +445,9 @@ export default {
         for (let key in node) {
           if (key !== 'children') {
             child[key] = node[key]
-          }
+          }else{
+			  child.hasechildren = true;
+		  }
         }
         if (parent_value !== undefined) {
           child.parent_value = parent_value

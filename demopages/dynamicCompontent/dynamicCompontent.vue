@@ -34,9 +34,9 @@
 		},
 		methods: {
 			async test1(){
-				let array = ['components/A','components/B'];
+				/* let array = ['components/A','components/B'];
 				let res=  require(`@/${array[parseInt( Math.random()*2)]}.vue`);
-				this.apps=res.default;
+				this.apps=res.default; */
 			}
 		}
 	}

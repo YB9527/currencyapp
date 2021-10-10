@@ -1,106 +1,171 @@
+import config from "../static/config.js"
+//var baseip  = "http://192.168.3.3:3333";
+//var baseip  = "https://sunliying.shop:11443";
+var baseip  = config.ip;
+export var baseURL  = baseip +"/";
 
-//var ip  = "http://192.168.3.3:3333";
-var ip  = "https://sunliying.shop:11443";
-exports.ip = ip; 
-
-
-var imgpriewurl  = ip+"/imgpriew/";
-exports.imgpriewurl = imgpriewurl;
-
-exports.baseURL  = ip+"/datawaiter/wscg/restaurant";
-
-/**
- * 请求数据
- */
-var requestPOST = function({url,data,header}) {
-	return new Promise((resolve, reject) => {
-		uni.request({
-			url, //仅为示例，并非真实接口地址。
-			method: "POST",
-			data,
-			header: header ? header : {
-				"Content-Type": "application/json;chartset=uft-8"
-			},
-			success: (res) => {
-				if (res.data.success) {
-					resolve(res.data.data);
-				} else {
+ class Api {
+	constructor(data={path:""}) {
+    let path = data.path?data.path:''
+	this.baseurl = baseURL+path;
+    //this.ip = baseip
+	}
+  static param2URL(url,data){
+    if(data){
+      url = url + "?";
+      for(let key in data){
+        url = url + key+"="+data[key]+"&";
+      }
+      url =url.substring(0,url.length - 1);
+    }
+    return url;
+  }
+  
+  request({method,url,data}){
+	  return new Promise((resolve, reject) => {
+	  	uni.request({
+	  		url, //仅为示例，并非真实接口地址。
+	  		method: method,
+	  		data,
+	  		success: (res) => {
+	  			if(res.data.isOk){
+	  			  resolve( res.data.data);
+	  			}else{
 					reject(res);
 				}
-			},
-			fail(e) {
-				reject(e);
-			}
-		});
-	});
-}
-exports.requestPOST =requestPOST;
-/**
- * 请求数据
- */
-var requestGET = function({url,data,header}) {
-	return new Promise((resolve, reject) => {
-		uni.request({
-			url, //仅为示例，并非真实接口地址。
-			method: "GET",
-			data,
-			header: header,
-			success: (res) => {
-				if(res.data.isOk){
-					resolve(res.data.data);
-				}else{
-					reject(res);
-				}
-				
-			},
-			fail(e) {
-				reject(e);
-			}
-		});
-	});
-}
-exports.requestGET =requestGET;
-
-
-
-var requestGETOneData = function(req){
-	return requestGET(req)
-		.then(datas=>{
-			if(datas && datas.length > 0){
-				return datas[datas.length-1];
-			}else{
-				return undefined;
-			}
-		});
+	  		},
+	  		fail(e) {
+	  			reject(e);
+	  		}
+	  	});
+	  });
+  }
+  /**
+   * get请求
+   */
+  get({url,data}) {
+    url = this.baseurl + url;
+    url = Api.param2URL(url,data);
+	return this.request({url});
 	
-}
-exports.requestGETOneData =requestGETOneData;
+  };
+  
+  /**
+   * post请求
+   */
+  post({url,data,headers}) {
+  	return new Promise((resolve, reject) => {
+  		uni.request({
+  			url, //仅为示例，并非真实接口地址。
+  			method: "POST",
+  			data,
+  			headers: headers || { "Content-Type": "application/json"},
+  			timeout:5000,
+  			success: (res) => {
+  				if(res.statusCode === 401){
+  					//token失效了，转到登录界面
+  					redirectToLogin();
+  				}else if (res.data.code === 500){
+  					console.log(res.data.msg);
+  					reject(res);
+  				}else {
+  					resolve(res);
+  				}
+  			},
+  			fail(e) {
+  				reject(e);
+  			}
+  		})
+  	});
+  }
+  
+  /**
+   * 查找单条数据
+   */
+  findDataOne({url,data}){
+    //debugger
+  	return this.get({url,data})
+  		.then(data=>{
+  			if(data ){
+  			  if(data instanceof  Array && data.length > 0){
+            return data[data.length-1];
+          }else{
+  			    return data;
+          }
+  			}else{
+  				return undefined;
+  			}
+  		});
+  };
+  
+  /**
+   * 找到总数
+   */
+  findTotal(searchdata,url="findTotal"){
+    let data ={};
+    if(searchdata !== undefined){
+      if( searchdata instanceof Array){
+          data.searchkey= JSON.stringify(searchdata);
+      }else {
+        data.searchkey= searchdata;
+      }
+    }
+  	return this.post({url,data});
+  }
+  /**
+   * 根据id查找
+   */
+  findDataById(id,url="findDataById"){
+    return this.findDataOne({url,data:{id}});
+  }
+  /**
+   * 查找分页数据
+   */
+  findDataPage(searchdata,pagenum,pagecount,url="findDataPage"){
+    let querydata = {};
+    if(searchdata !== undefined){
+      if( searchdata instanceof Array){
+          querydata.searchkey= JSON.stringify(searchdata);
+      }else {
+        querydata.searchkey= searchdata;
+      }
+    }
+    querydata.pagenum = pagenum;
+    querydata.pagecount = pagecount;
 
-var uploadFile = function({filePath,dir,dirs}) {
-
-	let url = ip + "/file/upload";
-	console.log(url)
-	return new Promise((resolve,reject)=>{
-		uni.uploadFile({
-			url: url, //仅为示例，非真实的接口地址
-			filePath: filePath,
-			name: 'file',
-			formData:{
-				dir:dir?dir:"",
-				dirs:dirs?dirs:""
-			},
-			success: (uploadFileRes) => {
-				let data = JSON.parse(uploadFileRes.data);
-				if(data.isOk){
-					resolve(data.data[0]);
-				}else{
-					reject(uploadFileRes);
-				}
-			},
-			fail: (e) => {
-				reject(e);
-			}
-		});
-	}) 
+    return this.post({url,data:querydata});
+  }
+  /**
+   * 查找所有数据
+   */
+  findDataAll(searchdata,url="findDataAll"){
+    let querydata = {};
+    if(searchdata !== undefined){
+      if( searchdata instanceof Array){
+          querydata.searchkey= JSON.stringify(searchdata);
+      }else {
+        querydata.searchkey= searchdata;
+      }
+    }
+    return this.post({url,data:querydata});
+  }
+	/**修改对象
+	 * @param {Object} data
+	 */
+	updateData(data,url="updateData"){
+	  return this.post({url,data});
+	}
+	/**保存对象
+	 * @param {Object} data
+	 */
+	saveData(data,url="saveData"){
+		return this.post({url,data});
+	}
+	/**删除对象
+	 * @param {Object} data
+	 */
+	deleteData(data,url="deleteData"){
+		return this.post({url,data});
+	}
 }
-exports.uploadFile =uploadFile;
+export default Api = Api;

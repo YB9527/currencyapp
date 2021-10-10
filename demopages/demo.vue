@@ -6,33 +6,6 @@
 		<view>
 		
 		</view>
-		
-		<view ><!-- #ifdef H5 -->
-				<view slot="header">
-					<button @click="showconditioncontent =!showconditioncontent">测试</button>
-					<searchpage v-bind="searchdata"></searchpage>
-					<button @click="addItem()">添加条目</button>
-					
-					<conditionalFilter ref="conditionalFilter" 
-						v-bind="conditionalfilterprop" >
-					</conditionalFilter>
-					
-					<conditionalFilterContent :dataArray="conditionalfilterprop.currentcontent" :showconditioncontent="conditionalfilterprop.showconditioncontent"></conditionalFilterContent>
-				</view>
-				<view slot="main" class="_main"> 
-					
-					<list v-bind="listprop" style="height: 1000rpx;">
-						<template  v-slot:todo="{item}">
-							    {{item}}
-						</template>
-					</list>
-					
-				</view>
-				<view slot="footer">
-					footer
-				</view>
-				<!-- #endif -->
-		</view>
 	</view>
 </template>
 

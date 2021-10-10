@@ -49,7 +49,7 @@
 		props:{
 			
 			click:Function,
-			showconditioncontent:Boolean,
+
 			dataArray:{
 				type:Array,
 				default:()=>{
@@ -73,16 +73,13 @@
 				type:Object,
 				default:()=>{
 					return {
-						show:true,
-						index:0,
+						show:false,
+						index:1,
 						options:[
 							{key:"price0",label:"价格从高到低"},
 							{id:"price1",label:"价格从高到低"},
 							{id:"distance",label:"距离从进到远"},
 						],
-						click:()=>{
-							
-						}
 					}
 				}
 			}
@@ -90,21 +87,14 @@
 		components:{conditionalFilterContent},
 		data(){
 			return{
-				
+				showconditioncontent:false,
 			}
 		},
 		computed:{
 			
 		},
 		watch:{
-			showconditioncontent(val){
-				if(!val){
-					for(let data of this.dataArray){
-						data.show = false;
-					}
-				}
-				this.reflushStyle();
-			}
+
 		},
 		created() {
 			
@@ -112,22 +102,34 @@
 		methods:{
 			//多条件筛选返回
 			conditionalOk(){
-				
+				this.showconditioncontent = false;
+				for(let data of this.dataArray){
+					data.show = false;
+				}
+				this.reflushStyle();
 				this.$emit("conditionalOk",this.dataArray)
 			},
 			itemclick(item){
 				if(this.order){
 					this.order.show = false;
 				}
-				
 				for(let data of this.dataArray){
 					if(data !== item){
 						data.show = false;
 					}
 				}
-				item.show = !item.show;
-				this.click&&this.click(item,item.show);
+				
+				let show = !item.show;
+				item.show = show;
+				
+				this.reflushStyle();
+				this.showconditioncontent = show;
+				if(show){
+					this.$Tool.arrayReplace(this.currentcontent,item.content);
+				}
 			},
+			
+			
 			reflushStyle(){
 				if(!this.dataArray){
 					return;
@@ -173,7 +175,7 @@
 			orderClick(index,option){
 				this.order.show = false;
 				this.order.index = index;
-				this.order.click && this.order.click(index,option);
+				this.$emit("orderClick",index,option);
 			},
 			ordericonClick(order){
 			
@@ -184,6 +186,7 @@
 					order.show = !order.show
 					
 				}
+				
 			}
 		}
 	}

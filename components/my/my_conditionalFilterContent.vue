@@ -3,7 +3,10 @@
 	<view class="conditionalFilterContentvue" >
 		<transition  name="conditioncontent" mode="out-in">
 			<view class="conditionalFilterContent" v-if="showconditioncontent">
-				<list :dataArray="dataArray" :showisloadover="false" :datakey="'title'">
+				<list  :dataArray="dataArray" 
+					:showisloadover="false" 
+					:showactive="false"
+					:datakey="'title'">
 					<template  v-slot="{item}">
 							<view class="listitem">
 								<view class="title"> 
@@ -14,7 +17,7 @@
 											v-for="(iteminitem,j) in item.itemarray"
 											:key="j"
 											>
-										 <view v-if="iteminitem.type === 'button'"  @click="itemChildClick(iteminitem)">
+										 <view v-if="iteminitem.type === 'button'"  @click="itemChildClick(item,iteminitem)">
 											 <text  class="button label">
 												{{iteminitem.text}}
 											 </text>
@@ -132,7 +135,8 @@
 		},
 		
 		methods:{
-			itemChildClick(item){
+			itemChildClick(group,item){
+				
 				let active = this.active;
 				if(	item.class === undefined){
 					item.class = "";
@@ -145,6 +149,15 @@
 					}else{
 						item.class =classstr.substring(0,classstr.length - active.length);
 						item.have = false;
+					}
+					//如果设置了单选
+					if(group.multiple === false){
+						for(let child of group.itemarray){
+							if(child !== item){
+								child.class =classstr.substring(0,classstr.length - active.length);
+								child.have = false;
+							}
+						}
 					}
 				}
 				//console.log(33,this.dataArray)

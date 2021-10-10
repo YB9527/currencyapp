@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="aa">
 		<input  placeholder="测试" v-focus />
 	</view>
 </template>
@@ -18,8 +18,8 @@
 </script>
 
 <style>
-	input{
-		border: 1px solid #FF9700;
+	.aa{
+		color:  $uni-color-primary;
 		padding-left: 20rpx;
 	}
 </style>

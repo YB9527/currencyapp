@@ -5,21 +5,32 @@ Vue.prototype.$store = store
 
 Vue.config.productionTip = false
 
+/* 全局工具 */
+import * as Checker from '@/common/js/Checker.js'
+Vue.prototype.$Checker = Checker;
 
-import Tool from '@/common/js/Tool.js'
-Vue.prototype.$Tool = Tool;
-
-import DicJson from '@/common/js/DicJson.js'
+import  DicJson from '@/common/js/DicJson.js'
 Vue.prototype.$DicJson = DicJson;
 
-import Api from '@/api/api.js'
-Vue.prototype.$Api = Api;
-
-import sysApi from '@/api/sysApi.js'
-Vue.prototype.$SysApi = sysApi;
-
-import functionTool from '@/common/js/FunctionTool.js'
+import * as  functionTool from '@/common/js/FunctionTool.js'
 Vue.prototype.$FunctionTool = functionTool;
+
+/* import $Router from '@/common/js/Router.js';
+Vue.prototype.$Router = $Router; */
+
+import * as Tool from '@/common/js/Tool.js'
+Vue.prototype.$Tool = Tool;
+
+import * as UniTool from '@/common/js/UniTool.js'
+Vue.prototype.$UniTool = UniTool;
+
+/* 全局api */
+import  Api from '@/api/Api.js'
+Vue.prototype.$Api =new  Api();
+
+import  SysApi from '@/api/SysApi.js'
+Vue.prototype.$SysApi =new  SysApi();
+
 
 Vue.filter('dateTimeFilter',date=>{
 	

@@ -1,12 +1,3 @@
-:root {
-  --primary: #67C23A;
-  --primary2:rgb(225, 243, 216);
-  --danger: #ff5a6e;
-  --white: #fff;
-  --fontsmall: 18rpx;
-  --fonttitle: 32rpx;
-  --fontlabel:24rpx;
-}
 .label{
 	color: #999999;
 }
