@@ -5,9 +5,17 @@ Vue.prototype.$store = store
 
 Vue.config.productionTip = false
 
+import my_link from '@/components/my/my_link';
+Vue.component('myLink', my_link);
+
+import my_form_item from '@/components/my/form/my_form_item';
+Vue.component('myFormItem', my_form_item);
+
 /* 全局工具 */
 import * as Checker from '@/common/js/Checker.js'
 Vue.prototype.$Checker = Checker;
+
+
 
 import  DicJson from '@/common/js/DicJson.js'
 Vue.prototype.$DicJson = DicJson;

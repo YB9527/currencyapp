@@ -11,88 +11,26 @@
 			:key="index"
 			class="module"
 			:class="module.class">
-			
 			<slot v-if="module.slot" ></slot>
 			<view class="modulecontent">
-				<view v-if="!module.slot" class="title titletag" :class="module.titleclass" ><text> {{module.title}}</text></view>
+				<view v-if="!module.slot" class="title " :class="module.titleclass" ><text> {{module.title}}</text></view>
 				<view v-if="!module.slot"  :class="module.modulecontentclass">
 					
 					
 					<view v-for="(column,j) in module.array"  v-if="!(column.show === false)">
 						<slot v-if="column.type === 'slot' "  :data="data" :modulerow="column"></slot>
-						<view v-else :class="column.class" >
-							<view class="label" ><text> {{column.text}} </text></view>
-							<view class="value">
-								<text v-if="column.type === 'text'" >{{data[column.prop] | textfileter(column.optionmap)}}</text>
-								<input
-									@blur="childCheck(column)"
-									v-if="column.type === 'input'" type="text"  v-model="data[column.prop]"   :placeholder="column.placeholder"/>
-								<input
-									@blur="childCheck(column)"
-									v-if="column.type === 'number'" type="number"  v-model="data[column.prop]"   :placeholder="column.placeholder"/>
-								<input
-									@blur="childCheck(column)"
-									v-else-if="column.type === 'idcard'" type="idcard"    v-model="data[column.prop]"  :placeholder="column.placeholder"/>
-								<input
-									@blur="childCheck(column)"
-									v-else-if="column.type === 'tel'"  type="tel"  v-model="data[column.prop]"  :placeholder="column.placeholder" />
-								<input
-									@blur="childCheck(column)"
-									v-else-if="column.type === 'digit'"  type="digit"  v-model="data[column.prop]"  :placeholder="column.placeholder" />
-								<view 
-									@blur="childCheck(column)"
-									v-else-if="column.type === 'textarea'" >
-									  <textarea  
-										@blur="childCheck(column)"
-										:disabled="column.disabled"
-									    v-model="data[column.prop]" 
-									    :placeholder="column.placeholder"/>
-								</view>
-								<radio-group   v-else-if="column.type === 'radio'" @change="radioChange($event,data,column.prop,column)">
-									<label class="gender-item" v-for="(radio,j) in column.options" :key=j>
-										<radio :checked="data[column.prop] == radio.key" class="gender-item-radio"  :value="radio.key" />
-										<text class="gender-item-text">{{radio.value}}</text>
-									</label>
-								</radio-group>
-								<uni-datetime-picker
-									v-else-if="column.type === 'date'"
-									class="datepicker"
-									:disabled="column.disabled"
-									type="date" v-model="data[column.prop]">
-								</uni-datetime-picker>
-								<uni-data-picker 
-									:isshow="true"
-									v-else-if="column.type === 'datapicker' 
-										|| column.type === 'cascader' 
-										|| column.type === 'select'"
-									:placeholder="column.placeholder" 
-									v-model="data[column.prop]"
-									:popup-title="column.placeholder" 
-									:localdata="column.options"
-									:step-searh="true" self-field="code" parent-field="parent_code"
-									@change="onchange" 
-									@nodeclick="onNodeClick($event,data,column.prop,column)">
-								</uni-data-picker>
-								<div v-else-if="column.type === 'fj'">
-									<!-- <webUploadFile :elupload="column.upload" :idname="column.name"></webUploadFile> -->
-									<myUploadFile  :uploadAttr="column.upload" ></myUploadFile>
-								</div>
-							</view>
-						</view>
-						<view :class="column.class" class="error" v-if="column.error">
-							<view class="label"></view>
-							<view class="value">
-								<text>*{{column.error}}</text>
-							</view>
+						<view v-else>
+							<my_form_item :column="column" :data="data"></my_form_item>
 							
 						</view>
+						
 					</view>
 				</view>
 						
 			</view>
 			
 		</view>
-	`	<view class="subgroup aroundrow" v-if="haveback || haveok">
+		<view class="subgroup aroundrow" v-if="haveback || haveok">
 			<view class="cancerbtn  itemchild" v-if="haveback"  @click="back">
 				 <text  class="button label">
 					{{backtext}}
@@ -109,10 +47,11 @@
 
 <script>
 	import DicJson from '@/common/js/DicJson.js'
-	import Tool from '@/common/js/Tool.js'
+	import * as Tool from '@/common/js/Tool.js'
 	import myUploadFile from './my-uploadFile'
+	import my_form_item from './form/my_form_item.vue'
 	export default{
-		components:{myUploadFile},
+		components:{myUploadFile,my_form_item},
 		props:{
 			
 			data:{
@@ -135,7 +74,7 @@
 							{type:"input",class:"row",labelclass:"",valueclass:"",text:"户主姓名",prop:"hzxm"},
 							{type:"idcard", class:"row",labelclass:"",valueclass:"",text:"证件号码",prop:"hzzjhm"},
 							{type:"input", class:"row",labelclass:"",valueclass:"",text:"通信地址",prop:"txdz"},
-							// {type:"datapicker", class:"row",labelclass:"",valueclass:"",text:"性别",prop:"xb",options:Tool.mapToArray(DicJson.XB,"value","text")},
+							/* {type:"datapicker", class:"row",labelclass:"",valueclass:"",text:"性别",prop:"xb",options:Tool.mapToArray(DicJson.XB,"value","text")}, */
 							{type:"tel", class:"row",labelclass:"",valueclass:"",text:"电话",prop:"15968711521"},
 						]},
 						{slot:"sfzzm"},//身份證正面
@@ -180,10 +119,9 @@
 			
 		},
 		filters:{
-			textfileter(text,optionmap,column){
-		
+			textfileter(text,optionmap){
+				
 				if(optionmap && optionmap[text]){
-		
 					return optionmap[text]
 				}
 				return text;
@@ -192,20 +130,20 @@
 		created() {
 			//console.log(DicJson)
 			//console.log(this.$DicJson.XB)
-
+			console.log(555,this.$Tool);
+			console.log(666,Tool);
 		},
 		methods:{
 			init(){
 
 			},
 			radioChange(e,data,prop,row) {
+				
 				 data[prop] = e.target.value
 				 this.childCheck(row);
 			},
 			onNodeClick(node,data,prop,row){
 				data[prop] = node.value;
-				console.log(data);
-				//console.log(data[prop],node,row);
 				this.childCheck(row);
 			},
 			back(){
@@ -260,68 +198,23 @@
 </script>
 
 <style lang="scss" >
+	
 	.my_formvue{
 		.title{
-			font-size:  $uni-font-size-title; 
+			font-size:  var(--fonttitle); 
 		}
 		.titletag{
-			border-left: 12rpx solid $uni-color-title;
+			border-left: 12rpx solid var(--primary);
 			padding-left: 20rpx;
 		}
-		.row{
-			display: flex;
-			align-items: center;
-			height: 100rpx;
-			.value{
-				width: 550rpx;
-			}
-		}
-		.label{
-			min-width: 220rpx;
-			font-size:  var(--fontlabel);
-		}
-		.error{
-			margin-top: -20rpx;
-			height: 50rpx;
-			color: $uni-color-error;
-		}
-		.value{
-			
-		}
-		.uni-data-tree-input{
-			::v--deep .input-value-border {
-			    border: 0px solid #e5e5e5!important;
-			    border-radius: 5px;
-			}
-		}
-		uni-radio-group{
-			display: flex;
-			justify-content: space-between;
-			.gender-item-radio{
-				margin-right: 10rpx;
-			}
-		}
-		.module{
-			margin-bottom: 20rpx;
-		}
-		.modulecontent{
-			padding: 10px;
-			border-radius: 15upx;
-			box-shadow: 0upx 5upx 20upx rgba(0, 0, 0, 0.1);
-			background: #FFFFFF;
-		}
-	
-		input{
-			border-bottom: solid 2px #F1F1F1;
-		}
+		
+		
 		.subgroup{
 			display: flex;
 			justify-content: space-around;
 			button{
 				width: 46%;
 			}
-		}
-		.subgroup{
 			height: 100rpx;
 			align-items: center;
 			text-align: center;
@@ -337,8 +230,7 @@
 				width: calc(50% - 40px);
 				height: 60rpx;
 				line-height: 60rpx;
-				background-color: $uni-color-primary;
-				//background-color: #FFAA7F;
+				background-color: var(--primary);
 				.label{
 					color: #FFFFFF;
 				}
@@ -351,22 +243,19 @@
 		}
 		
 	}
-	textarea{
-		border: solid 2px #F1F1F1;
-		width: 100%;
 		
+		
+		
+	.module{
+		margin-bottom: 20rpx;
 	}
-	.uni-textarea-placeholder{
-		font-size: 26rpx;
-		color: #dc9f9f;
+	.modulecontent{
+		padding: 10px;
+		border-radius: 15upx;
+		box-shadow: 0upx 5upx 20upx rgba(0, 0, 0, 0.1);
+		background: #FFFFFF;
 	}
-
-	.wraprow{
-		.value{
-			width: 100%;
-		}
+	
 		
-		
-		
-	}
+	
 </style>

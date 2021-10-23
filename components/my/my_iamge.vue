@@ -4,12 +4,12 @@
 		<image
 			@click="click"
 			v-if="src"
-			mode="aspectFill"
+			mode="aspectFit"
 			:src="src" 	
 			@error="error"></image>
 		<image
 			v-else-if="losturl"
-			mode="aspectFill"
+			mode="aspectFit"
 			:src="losturl" 	
 			></image>
 		<view v-else class="error">

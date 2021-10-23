@@ -13,7 +13,7 @@
 					<scroll-view v-else-if="inputSelected.length" class="selected-area" scroll-x="true">
 						<view class="selected-list">
 							<view class="selected-item" v-for="(item,index) in inputSelected" :key="index">
-								<text>{{item.text}}</text><text v-if="index<inputSelected.length-1" class="input-split-line">{{split}}</text>
+								<text>{{textFilter?textFilter(item.value):item.text}}</text><text v-if="index<inputSelected.length-1" class="input-split-line">{{split}}</text>
 							</view>
 						</view>
 					</scroll-view>
@@ -82,6 +82,7 @@
 					return {}
 				}
 			},
+			textFilter:Function,
 			popupTitle: {
 				type: String,
 				default: '请选择'
@@ -281,7 +282,7 @@
 		flex-wrap: nowrap;
 		font-size: 14px;
 		line-height: 38px;
-		padding: 0 5px;
+	
 		overflow: hidden;
 		/* #ifdef APP-NVUE */
 		height: 40px;
@@ -289,8 +290,8 @@
 	}
 
 	.input-value-border {
-		border: 1px solid #e5e5e5;
-		border-radius: 5px;
+		border-bottom: 1px solid #e5e5e5;
+	
 	}
 
 	.selected-area {
@@ -316,16 +317,17 @@
 		display: flex;
 		/* #endif */
 		flex-direction: row;
-		flex-wrap: nowrap;
-		padding: 0 5px;
+		flex-wrap: wrap;
+		
 	}
 
 	.selected-item {
 		flex-direction: row;
-		padding: 0 1px;
+		
 		/* #ifndef APP-NVUE */
 		white-space: nowrap;
 		/* #endif */
+		font-size: 34rpx;
 	}
 
 	.placeholder {

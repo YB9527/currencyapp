@@ -4,17 +4,12 @@
  * @param {Object} key
  */
 export var getStorageData = function (key) {
-	return new Promise((resole,reject)=>{
-		uni.getStorage({
-				key,
-				success:  (storage)=> {
-					resole(storage.data);
-				},fail(e) {
-					resole(undefined);
-				}
-			});
-	});
- 
+	try {
+	    const value = uni.getStorageSync(key);
+	    return value;
+	} catch (e) {
+	    console.log(e);
+	}
 };
 
 
@@ -24,27 +19,22 @@ export var getStorageData = function (key) {
  * @param {Object} data
  */
 export var setStorageData = function(key,data){
-	uni.setStorage({
-	    key,
-	    data
-	});
+	try {
+	    uni.setStorageSync(key, data);
+	} catch (e) {
+	    console.log("e",e);
+	}
+
 }
 
 
 /**
  * 弹出确定按钮
- * @param {Object} tip
+ * @param {Object} content
  */
-export var showModalTip = function(tip,data={showCancel:false}){
-	return new Promise((resole,reject)=>{
-		uni.showModal({
-			content:tip,
-			showCancel:data.showCancel,
-			success(){
-				resole(true);
-			}
-		});
-	})
+export var showModalTip = function(content,data={type:"none"}){
+	data.showCancel = false;
+	return showMoal(content,data);
 }
 
 export var showMoal = function(content,data={}){
@@ -53,6 +43,7 @@ export var showMoal = function(content,data={}){
 			title:data.title?data.title:"提示",
 			content:content,
 			showCancel:data.showCancel,
+			confirmColor:data.confirmColor,
 			 success: function (res) {
 			        if (res.confirm) {
 			            resole(true);
@@ -106,6 +97,7 @@ export var previewImageInDataArray = function(index,dataArray,key="url"){
 	if(dataArray){
 		let urls = [];
 		dataArray.forEach(data=>{
+			
 			urls.push(data[key]);
 		});
 		previewImage(urls[0],urls);
@@ -119,6 +111,9 @@ export var previewImageInDataArray = function(index,dataArray,key="url"){
  * @param {Object} urlArray
  */
 export var previewImage = function(url,urlArray){
+	if(!urlArray){
+		urlArray = [url];
+	}
 	uni.previewImage({current:url,urls:urlArray});
 }
 
@@ -147,14 +142,20 @@ export var chooseFile = function(data = {extension:['.zip','.rar'],count:1}){
 
 
 export var downloadFile = function(url){
-	window.open(url);
+	
+	uni.openDocument({
+		filePath:url
+	})
 	return;
 	return new Promise((resolve,reject)=>{
 		uni.downloadFile({
 			url: url, //仅为示例，并非真实的资源
 			success: (res) => {
 				if (res.statusCode === 200) {
-					console.log('下载成功');
+					//console.log('下载成功');
+					window.open(res.tempFilePath);
+					
+					//console.log(res.tempFilePath);
 					resolve(true);
 				}else{
 					reject(res);
@@ -169,4 +170,14 @@ export var downloadFile = function(url){
 	});
 	
 }
+
+export var removeStorage = function(key){ 
+	uni.removeStorage({
+	    key: key,
+	    success: function (res) {
+	       // console.log('success');
+	    }
+	});
+}
+
 

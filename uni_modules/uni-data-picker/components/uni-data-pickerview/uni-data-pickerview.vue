@@ -96,7 +96,7 @@
         if (item.disable) {
           return
         }
-		console.log(this);
+		//console.log(this);
         const node = this.dataList[i][j]
         const {
           value,

@@ -1,6 +1,6 @@
 <template>
 	<view class="aa">
-		<text class="bb">测试样式变量</text>
+		<text class="bb">测试样式变量11</text>
 		<button type="primary" @click="testSysApi">测试系统api</button>
 		<view v-for="(page,index) in pageArray" 
 			:key="index" 

@@ -256,7 +256,9 @@
 				
 				.active{
 					background-color: var(--primary2);
-					
+					text{
+						color: #FFFFFF;
+					}
 				}
 			}
 			.subgroup{

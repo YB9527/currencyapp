@@ -6,7 +6,7 @@
 		v-model="uploadAttr.filelist" 
 		file-mediatype="image" mode="grid"
 		file-extname="jpeg,png,jpg" 
-		:limit="uploadAttr.limit" 
+		:limit="uploadAttr.limit?uploadAttr.limit:undefined" 
 		@delete="deleteUniFile"
 		@select="select" 
 		:readonly="uploadAttr.disabled">
@@ -17,7 +17,6 @@
 </template>
 
 <script>
-	
 	
 	export default {
 	
@@ -43,6 +42,7 @@
 					/* #ifdef  MP-WEIXIN */
 					h5disabled: true,
 					/* #endif */
+					
 				}
 				
 			}
@@ -57,7 +57,10 @@
 			}
 			if(uploadAttr.filelist){
 				for(let file of uploadAttr.filelist){
-					file.path = file.url;
+					if(file.url){
+						file.path = file.url;
+					}
+					
 				}
 			}
 		},
@@ -78,11 +81,14 @@
 			deleteUniFile({tempFile,tempFilePath}){
 				let uploadAttr = this.uploadAttr;
 				for (var i = 0; i < uploadAttr.filelist.length; i++) {
-					if (uploadAttr.filelist[i].path === tempFile.path) {
+					
+					if (uploadAttr.filelist[i].id === tempFile.id) {
 						uploadAttr.filelist.splice(i, 1);
+						i--;
 						if(!tempFile.uuid){
 							uploadAttr.deleteimageValue.push(tempFile);
 						}
+						break;
 					}
 				}
 				for (var j = 0; j < uploadAttr.addimageValue.length; j++) {

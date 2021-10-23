@@ -370,7 +370,7 @@
 		}
 		.selflistitem {
 		  transition: all 1s;
-		  display: inline-block;
+		  // display: inline-block;
 		}
 		.listitemactive{
 			border-left: 2rpx solid var(--primary);

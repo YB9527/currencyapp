@@ -13,14 +13,15 @@ class Api {
 	findConfig(){
 	  if(!Api.config){
 		 return  this.requestOrg({
-		  	url:"/static/json/config.json",
+		  	url:"/h5/static/json/config.json",
 		}).then(res=>{
-			let data = res.data;
+			let config;
 			if(typeof(data) === "string"){
-				Api.config = uni.vue.$Tool.parse(data);
+				config = uni.vue.$Tool.parse(res.data);
 			}else{
-				Api.config = data;
+				config = res.data;
 			}
+			Api.config=config[config.state];
 			this.baseurl = Api.config.ip+"/"+this.path;
 			this.ip = Api.config.ip;
 			//console.log(Api.config);

@@ -71,22 +71,19 @@
 				searchEvent: {
 					ok: (value) => {
 						//console.log("查询",value);
-						this.$FunctionTool.debounce("定时启动loading",this.$UniTool.showLoading,{wait:500,params:[undefined,false]});
 						this.$emit("searchOk", value, this.reFushData);
 					},
 					clear: () => {
 						//console.log("清除");
-						this.$FunctionTool.debounce("定时启动loading",this.$UniTool.showLoading,{wait:500,params:[undefined,false]});
 						this.$emit("searchClear", this.reFushData);
 					}
 				},
 				tableEvent: {
 					itemClick: (index, data)=>{
-						
 						this.$emit("itemClick", index, data);
 					},
 					handleCurrentChange: async (pageindex,pagesize, datacallback) => {
-						
+
 						this.$emit("findData", pageindex,pagesize, datacallback);
 					},
 				},
@@ -105,7 +102,6 @@
 			 */
 			reFushData(datas) {
 				this.$Tool.arrayReplace(this.datas, datas);
-				this.$FunctionTool.debounce("定时启动loading",this.$UniTool.hideLoading);
 			},
 
 			//多条件筛选

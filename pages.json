@@ -3,6 +3,15 @@
 		{
 			"path": "pages/index/index"
 		}
+        ,{
+            "path" : "pages/index2/index2",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"subPackages": [
 		/*demo子包*/
@@ -79,7 +88,14 @@
 	           "iconPath" : "static/images/icon_my.png",
 	           "selectedIconPath" : "static/images/icon_my.png",
 	           "text" : "菜单1"
-	       }
+	       },
+		   {
+		       "pagePath" : "pages/index2/index2",
+		       "iconPath" : "static/images/icon_my.png",
+		       "selectedIconPath" : "static/images/icon_my.png",
+		       "text" : "菜单2"
+		   }
+		   
 		]
 	},
 	"globalStyle": {
@@ -91,5 +107,15 @@
 		"app-plus":{
 			"bounce":"none"
 		}
+	},
+	"condition" : { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [
+			{
+				"name": "", //模式名称
+				"path": "", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			}
+		]
 	}
 }
