@@ -20,7 +20,9 @@ export default class UniFormData extends  MyFormData{
 	 * 跳转到查看页面
 	 */
 	async goToSelect(id,type="navigateTo"){
-		let layout =await this.getSelectLayout(id);
+		
+	
+		let layout = await this.getSelectLayout(id);
 		this.goToPage(this.pageurl_select, "getSelectLayout",id,type);
 	}
 	/**
@@ -45,7 +47,13 @@ export default class UniFormData extends  MyFormData{
 		this.goToPage(this.pageurl_delete,"getUpdateLayout",id,type);
 	}
 	goToPage(url,layoutFunctionName,id,type="navigateTo"){
-		
-		uni.vue.$mRouter[type](url,{id,layoutFunctionName});
+		let data;
+		if(typeof(id) == 'string'){
+			data = {id,layoutFunctionName};
+		}else{
+			data = id;
+			data.layoutFunctionName =layoutFunctionName;
+		}
+		uni.vue.$mRouter[type](url,data);
 	}
 }

@@ -1,21 +1,23 @@
-:root {
-  --primary: #2a7303;
-  --primary2:#40b104;
-  --danger: #ff5a6e;
-  --warning:#E6A23C;
-  --white: #fff;
-  --fontsmall: 18rpx;
-  --fonttitle: 32rpx;
-  --sectitle: 26rpx;
-  --fontlabel:28rpx;
+.matchparent{
+	width: 100%;
+	height: 100%;
 }
-
-.label{
+.label {
 	color: #999999;
 }
-.warning{
+.value{
+	font-size:  $uni-font-size-value;
+}
+.placeholder {
+	color: grey;
+	font-size:  $uni-font-size-value;
+	font-size:  34rpx;
+}
+	
+.warning {
 	color: var(--warning);
 }
+
 .icon-del-box {
 	/* #ifndef APP-NVUE */
 	display: flex;
@@ -39,13 +41,50 @@
 	background-color: #fff;
 	border-radius: 2px;
 }
- .rotate {
-     position: absolute;
-     -webkit-transform: rotate(90deg);
-     transform: rotate(90deg);
- }   
-.uni-input-input{
+
+.rotate {
+	position: absolute;
+	-webkit-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
+
+.uni-input-input {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+}
+
+
+page,
+uni-page-body {
+	height: 100%;
+	background-color: #FFFFFF;
+}
+
+.input-value-border {
+	border: 0px solid #e5e5e5 !important;
+	border-radius: 0px !important;
+}
+
+.box {
+	padding: 10px;
+	width: 100%;
+	border-radius: 15upx;
+	margin: 20px auto;
+	box-shadow: 0upx 5upx 20upx rgba(0, 0, 0, 0.1);
+}
+
+.shadow {
+	padding: 10px;
+	width: 100%;
+	box-shadow: 0upx 5upx 20upx rgba(0, 0, 0, 0.1);
+}
+
+.row {
+	display: flex;
+}
+
+.sprow {
+	display: flex;
+	justify-content: space-between;
 }

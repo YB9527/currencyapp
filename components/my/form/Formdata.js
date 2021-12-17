@@ -75,12 +75,17 @@ class FormData {
 	}
 	
 	async findDataById(id) {
-  	if(id){
-  		return this.dataApi.findDataById(id);
-  	}
-  }
+		if(id){
+			if(typeof(id) == 'string'){
+				return this.dataApi.findDataById(id);
+			}else{
+				return this.dataApi.findDataById(id.id);
+			}
+		}
+	}
 
 	async getSelectLayout(id) {
+		
 		this.state = FormData.SELECT;
 		let formconfig = this.baseModuleArray();
 		formconfig.title = this.title + "-查看";
@@ -125,7 +130,8 @@ class FormData {
 	 * 跳转到查看页面
 	 */
 	async goToSelect(id,type="navigateTo"){
-		let layout =await this.getSelectLayout(id);
+		
+		let layout =await this.getSelectLayout(id)
 		uni.vue.$mRouter[type](this.pageurl_select,layout);
 	}
 

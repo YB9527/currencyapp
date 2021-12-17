@@ -24,6 +24,7 @@
 					{label:"定位",url:"/demopages/position/position"},
 					{label:"store",url:"/demopages/store/store"},
 					{label:"动态组件",url:"/demopages/dynamicCompontent/dynamicCompontent"},
+					{label:"菜单",url:"/demopages/menuList/menuList"},
 				]
 			}
 		},

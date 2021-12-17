@@ -11,7 +11,7 @@
 			:key="index"
 			class="module"
 			:class="module.class">
-			<slot v-if="module.slot" ></slot>
+			<slot v-if="module.slot" :name="module.slot"></slot>
 			<view class="modulecontent">
 				<view v-if="!module.slot" class="title " :class="module.titleclass" ><text> {{module.title}}</text></view>
 				<view v-if="!module.slot"  :class="module.modulecontentclass">
@@ -47,7 +47,7 @@
 
 <script>
 	import DicJson from '@/common/js/DicJson.js'
-	import * as Tool from '@/common/js/Tool.js'
+	import Tool from '@/common/js/Tool.js'
 	import myUploadFile from './my-uploadFile'
 	import my_form_item from './form/my_form_item.vue'
 	export default{
@@ -74,7 +74,7 @@
 							{type:"input",class:"row",labelclass:"",valueclass:"",text:"户主姓名",prop:"hzxm"},
 							{type:"idcard", class:"row",labelclass:"",valueclass:"",text:"证件号码",prop:"hzzjhm"},
 							{type:"input", class:"row",labelclass:"",valueclass:"",text:"通信地址",prop:"txdz"},
-							/* {type:"datapicker", class:"row",labelclass:"",valueclass:"",text:"性别",prop:"xb",options:Tool.mapToArray(DicJson.XB,"value","text")}, */
+							{type:"datapicker", class:"row",labelclass:"",valueclass:"",text:"性别",prop:"xb",options:Tool.mapToArray(DicJson.XB,"value","text")},
 							{type:"tel", class:"row",labelclass:"",valueclass:"",text:"电话",prop:"15968711521"},
 						]},
 						{slot:"sfzzm"},//身份證正面
@@ -130,8 +130,7 @@
 		created() {
 			//console.log(DicJson)
 			//console.log(this.$DicJson.XB)
-			console.log(555,this.$Tool);
-			console.log(666,Tool);
+
 		},
 		methods:{
 			init(){

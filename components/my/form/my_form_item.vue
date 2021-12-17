@@ -2,7 +2,7 @@
 	<view >
 			<view  :class="column.class" >
 				<view class="label" ><text> {{column.text}} </text></view>
-				<view class="value">
+				<view :class="column.valueclass?column.valueclass : 'value'">
 					<text v-if="column.type === 'text'" >{{data[column.prop] | textfileter(column.optionmap)}}</text>
 					<input
 						@blur="childCheck(column)"
@@ -154,7 +154,7 @@
 		height: 100rpx;
 		.value{
 			
-			width: 520rpx;
+			width: 500rpx;
 			uni-input{
 				font-size: 34rpx ;
 			}
@@ -164,7 +164,7 @@
 		}
 	}
 	.label{
-		width: 220rpx;
+		width: 240rpx;
 		font-size:  var(--fontlabel);
 		flex-wrap: wrap;
 	}

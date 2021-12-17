@@ -12,6 +12,7 @@
 		</my_searchpage>
 			
 		<conditionalFilter 
+			v-if="conditionalfilterprop"
 			ref="conditionalFilter" 
 			@orderClick="orderClick"
 			@conditionalOk="conditionalOk" 
@@ -52,7 +53,10 @@
 			formdata: FormData,
 			datatotal: Number,
 			pagesize:Number,
-			dataArray: Array,
+			dataArray: {
+				type:Array,
+				default:()=>[]
+			},
 			searchdata :{
 				type:Object,
 				default: ()=>{

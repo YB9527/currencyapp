@@ -290,7 +290,7 @@
 	}
 
 	.input-value-border {
-		border-bottom: 1px solid #e5e5e5;
+		border-bottom: 0px solid #e5e5e5;
 	
 	}
 
@@ -330,9 +330,7 @@
 		font-size: 34rpx;
 	}
 
-	.placeholder {
-		color: grey;
-	}
+	
 
 	.input-split-line {
 		opacity: .5;

@@ -278,6 +278,12 @@ export var computedSex = function(zjhm) {
 	return sex;
 }
 
+export var computedSexDm = function(zjhm) {
+	let bm = zjhm && zjhm.length === 18 ? zjhm.substring(16, 17) : '';
+	let sex = bm && bm % 2 === 0 ? "2" : "1";
+	return sex;
+}
+
 
 export var computedAgeToKey = function(zjhm) {
 	let bm = zjhm && zjhm.length === 18 ? zjhm.substring(16, 17) : '';
